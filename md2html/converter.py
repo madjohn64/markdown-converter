@@ -56,14 +56,16 @@ class MarkdownConverter :
         :return: converted HTML string
         """
         return "<blockquote>" + quote_text.strip() + "</blockquote> \n"
-    
+ 
+ #Commenting out tokenize. Will erase once no longer needed as a reference.
+    """   
     def tokenize(self, markdown_lines: List[str]) -> List[Tuple] :
         """
-        convert list of lines into tokens, categorizing them.
+        #convert list of lines into tokens, categorizing them.
         
-        :param markdown_list: list of strings in markdown format
-        :return tokens: List of Tokens
-        """
+        #:param markdown_list: list of strings in markdown format
+        #:return tokens: List of Tokens 
+    """
         tokens = []        
         while i < len(markdown_lines):
             line = markdown_lines[i].rstrip()
@@ -86,6 +88,7 @@ class MarkdownConverter :
                 if markdown_lines[i + 1].startswith("=") :
                     tokens.append(Token(f'HEADER_1', line))
                 else : tokens.append(Token(f'HEADER_2', line))
+    """
     
     def convert(self, markdown_text: str) -> str :
         """
@@ -114,6 +117,15 @@ class MarkdownConverter :
                 i += 1
                 continue
             
+            # Headers (H1 and H2 type) based on Underlines. 
+            if i < len(lines) - 1 and re.match(r"^[#`-]|^\*|^\d|^\[|^\!", line) == None and re.match(r"^==|^--", lines[i + 1]) != None :
+                if lines[i + 1].startswith("=") :
+                    htmlText = htmlText + self.headerConvert("#" + line) #Allows use of the same Header function.
+                if lines[i + 1].startswith("-") :
+                    htmlText = htmlText + self.headerConvert("##" + line)
+                i += 2 #Increase two to skip the line that underlines since this is not part of the html.
+                continue
+                    
             # Blockquote
             if line.startswith('>') :
                 quote = line.lstrip('>')
@@ -139,6 +151,9 @@ class MarkdownConverter :
 converter = MarkdownConverter()
 
 html_output = converter.convert("# Hello World")
+print(html_output)
+
+html_output = converter.convert("Hello World\n------\n### Hello Again!!")
 print(html_output)
 
 html_output = converter.convert("#### Hello World")
