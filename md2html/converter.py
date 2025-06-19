@@ -56,6 +56,19 @@ class MarkdownConverter :
         :return: converted HTML string
         """
         return "<blockquote>" + quote_text.strip() + "</blockquote> \n"
+    
+    def orderedListConvert(self, text: str) -> str :
+        """
+        Convert function determined this markdown text is an ordered list member. 
+        This converts it to html.
+        
+        :param quote_text: raw markdown string
+        :return: converted HTML string
+        """
+        html_output = ""
+        for line in text.splitlines() :
+            html_output = html_output + "\t<li>" + line.strip() + "</li>\n"
+        return "<ol>\n" + html_output + "</ol>"
  
  #Commenting out tokenize. Will erase once no longer needed as a reference.
     """   
@@ -75,8 +88,8 @@ class MarkdownConverter :
                 continue
 
             # Headers - baseline
-            if re.match(r'^(#{1,6})\s+(.*)', line):
-                m = re.match(r'^(#{1,6})\s+(.*)', line)
+            if re.match(r'^(#{1,6})+(.*)', line):
+                m = re.match(r'^(#{1,6})+(.*)', line)
                 level = len(m.group(1))
                 content = m.group(2)
                 tokens.append(Token(f'HEADER_{level}', content))
@@ -127,14 +140,25 @@ class MarkdownConverter :
                 continue
                     
             # Blockquote
-            if line.startswith('>') :
-                quote = line.lstrip('>')
+            if line.startswith('>') or line.startswith(' >') :
+                quote = line.strip().strip('>')
                 j = i + 1
-                while j < len(lines) and lines[j].startswith('>') : 
-                    print("this is a test: " + lines[j])
-                    quote = quote + '\n' + lines[j].lstrip('>')
+                while j < len(lines) and lines[j].strip().startswith('>') : 
+                    quote = quote + '\n' + lines[j].strip().lstrip('>')
                     j += 1
                 htmlText = htmlText + self.blockquoteConvert(quote)
+                i += max(1, j-i)
+                continue
+            
+            #Ordered List.
+            # DOESN'T WORK - NEED TO FIX.
+            if re.match(r"^\d*\.", line) != None :
+                quote = re.sub(r"^\d*\.", "", line.strip())
+                j = i + 1
+                while j < len(lines) and re.match(r"^\d*\.", lines[j]) != None : 
+                    quote = quote + "\n" + re.sub(r"^\d*\.", "", lines[j].strip())
+                    j += 1
+                htmlText = htmlText + self.orderedListConvert(quote)
                 i += max(1, j-i)
                 continue
             
@@ -159,5 +183,5 @@ print(html_output)
 html_output = converter.convert("#### Hello World")
 print(html_output)
 
-html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.")
+html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.\n1. This is a OL.\n2. Item 2.\n300. Item 3.")
 print(html_output)
