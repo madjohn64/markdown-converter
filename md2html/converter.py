@@ -68,7 +68,25 @@ class MarkdownConverter :
         html_output = ""
         for line in text.splitlines() :
             html_output = html_output + "\t<li>" + line.strip() + "</li>\n"
-        return "<ol>\n" + html_output + "</ol>"
+        return "<ol>\n" + html_output + "</ol>\n"
+    
+    def unorderedListConvert(self, text: str, sub_list: bool) -> str :
+        """
+        Convert function determined this markdown text is an unordered list member. 
+        This converts it to html.
+        
+        :param quote_text: raw markdown string
+        :return: converted HTML string
+        """
+        html_output = ""
+        if sub_list : 
+            for line in text.splitlines() :
+                html_output = html_output + "\t\t<li>" + line.strip() + "</li>\n"
+        else :
+            for line in text.splitlines() :
+                if re.match(r"^<li>|<ul>", line.strip()) == None :
+                    html_output = html_output + "\t<li>" + line.strip() + "</li>\n"
+        return "<ul>\n" + html_output + "</ul>\n"
  
  #Commenting out tokenize. Will erase once no longer needed as a reference.
     """   
@@ -151,14 +169,31 @@ class MarkdownConverter :
                 continue
             
             #Ordered List.
-            # DOESN'T WORK - NEED TO FIX.
             if re.match(r"^\d*\.", line) != None :
-                quote = re.sub(r"^\d*\.", "", line.strip())
+                ordList = re.sub(r"^\d*\.", "", line.strip())
                 j = i + 1
                 while j < len(lines) and re.match(r"^\d*\.", lines[j]) != None : 
-                    quote = quote + "\n" + re.sub(r"^\d*\.", "", lines[j].strip())
+                    ordList = ordList + "\n" + re.sub(r"^\d*\.", "", lines[j].strip())
                     j += 1
-                htmlText = htmlText + self.orderedListConvert(quote)
+                htmlText = htmlText + self.orderedListConvert(ordList)
+                i += max(1, j-i)
+                continue
+            
+            #Unordered List.
+            if re.match(r"^\*\s|-\s|\+\s", line.strip()) != None :
+                unOrdList = re.sub(r"^\*\s|-\s|\+\s", "", line.strip())
+                subList = ""
+                j = i + 1
+                while j < len(lines) and (re.match(r"^\*\s|-\s|\+\s", lines[j].strip()) != None ) : 
+                    if re.match(r"^\t\*\s|\t-\s|\t\+\s", lines[j]) != None :
+                        subList = subList + re.sub(r"^\t\*\s|\t-\s|\t\+\s", "", lines[j].strip()) + "\n"
+                    else :
+                        if subList != "" :
+                            unOrdList = unOrdList + "\n" + self.unorderedListConvert(subList, True) 
+                            subList = ""
+                        unOrdList = unOrdList + "\n" + re.sub(r"^\*\s|-\s|\+\s", "", lines[j].strip())
+                    j += 1
+                htmlText = htmlText + self.unorderedListConvert(unOrdList, False)
                 i += max(1, j-i)
                 continue
             
@@ -183,5 +218,5 @@ print(html_output)
 html_output = converter.convert("#### Hello World")
 print(html_output)
 
-html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.\n1. This is a OL.\n2. Item 2.\n300. Item 3.")
+html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.\n1. This is a OL.\n2. Item 2.\n300. Item 3.\n- Unordered List.\n- Item 2.\n- Item 3.\n* Item 4.\n* Item 5.\n\nThis is a paragraph.")
 print(html_output)
