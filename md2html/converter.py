@@ -98,40 +98,17 @@ class MarkdownConverter :
         """
         html_lines = ['\t' + line for line in code_block.splitlines()]
         html_code = '\n'.join(html_lines)
-        return f"<pre><code>\n{html_code}\n</code></pre>\n"
+        return f"<pre><code>\n{html.escape(html_code)}\n</code></pre>\n"
     
- #Commenting out tokenize. Will erase once no longer needed as a reference.
-    """   
-    def tokenize(self, markdown_lines: List[str]) -> List[Tuple] :
+    def inlineCodeConvert(self, code_text: str) -> str :
         """
-        #convert list of lines into tokens, categorizing them.
+        Convert function determined this markdown text is inline code. 
+        This converts the inline code to html.
         
-        #:param markdown_list: list of strings in markdown format
-        #:return tokens: List of Tokens 
-    """
-        tokens = []        
-        while i < len(markdown_lines):
-            line = markdown_lines[i].rstrip()
-            if not line.strip():
-                tokens.append(Token('EMPTY_LINE', ''))
-                i += 1
-                continue
-
-            # Headers - baseline
-            if re.match(r'^(#{1,6})+(.*)', line):
-                m = re.match(r'^(#{1,6})+(.*)', line)
-                level = len(m.group(1))
-                content = m.group(2)
-                tokens.append(Token(f'HEADER_{level}', content))
-                i += 1
-                continue
-            
-            # Headers 1 & 2 - underline type
-            if i < len(markdown_lines) - 1 and re.match(r"^[#`-]|^\*|^\d|^\[|^\!", line) == None and re.match(r"^=|^-", markdown_lines[i + 1]) != None :
-                if markdown_lines[i + 1].startswith("=") :
-                    tokens.append(Token(f'HEADER_1', line))
-                else : tokens.append(Token(f'HEADER_2', line))
-    """
+        :param code_text: raw markdown string
+        :return: converted HTML string
+        """
+        return f"<code>{html.escape(code_text.strip())}</code>"
     
     def convert(self, markdown_text: str) -> str :
         """
@@ -231,19 +208,27 @@ class MarkdownConverter :
 
 
 #Test Driver - delete this once complete.
-converter = MarkdownConverter()
+def main() :
+    """
+    Test driver for the MarkdownConverter class.
+    """
+    
+    converter = MarkdownConverter()
 
-html_output = converter.convert("# Hello World")
-print(html_output)
+    html_output = converter.convert("# Hello World")
+    print(html_output)
 
-html_output = converter.convert("Hello World\n------\n### Hello Again!!")
-print(html_output)
+    html_output = converter.convert("Hello World\n------\n### Hello Again!!")
+    print(html_output)
 
-html_output = converter.convert("#### Hello World")
-print(html_output)
+    html_output = converter.convert("#### Hello World")
+    print(html_output)
 
-html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.\n1. This is a OL.\n2. Item 2.\n300. Item 3.\n- Unordered List.\n- Item 2.\n- Item 3.\n* Item 4.\n* Item 5.\n\nThis is a paragraph.\n\n")
-print(html_output)
+    html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.\n1. This is a OL.\n2. Item 2.\n300. Item 3.\n- Unordered List.\n- Item 2.\n- Item 3.\n* Item 4.\n* Item 5.\n\nThis is a paragraph.\n\n")
+    print(html_output)
 
-html_output = converter.convert("\n\t<tag>This is a code block.\n\tWith some code in it.</tag>\n")
-print(html_output)
+    html_output = converter.convert("\n\t<tag>This is a code block.\n\tWith some code in it.</tag>\n")
+    print(html_output)
+
+if __name__ == "__main__":
+    main()
