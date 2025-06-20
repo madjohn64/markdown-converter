@@ -1,6 +1,6 @@
 # Central logic for Markdown converstion to HTML.
 
-import re
+import re, html
 from typing import List, Tuple
 
 class Token:
@@ -87,7 +87,19 @@ class MarkdownConverter :
                 if re.match(r"^<li>|<ul>", line.strip()) == None :
                     html_output = html_output + "\t<li>" + line.strip() + "</li>\n"
         return "<ul>\n" + html_output + "</ul>\n"
- 
+
+    def codeBlockConvert(self, code_block: str) -> str :
+        """
+        Convert function determined this markdown text is a code block. 
+        This converts the code block to html.
+        
+        :param code_block: raw markdown string
+        :return: converted HTML string
+        """
+        html_lines = ['\t' + line for line in code_block.splitlines()]
+        html_code = '\n'.join(html_lines)
+        return f"<pre><code>\n{html_code}\n</code></pre>\n"
+    
  #Commenting out tokenize. Will erase once no longer needed as a reference.
     """   
     def tokenize(self, markdown_lines: List[str]) -> List[Tuple] :
@@ -156,6 +168,18 @@ class MarkdownConverter :
                     htmlText = htmlText + self.headerConvert("##" + line)
                 i += 2 #Increase two to skip the line that underlines since this is not part of the html.
                 continue
+            
+            # Code Blocks.
+            if re.match(r"^( {4}|\t)", line):
+                code_block_lines = [re.sub(r"^( {4}|\t)", "", line)]
+                j = i + 1
+                while j < len(lines) and re.match(r"^( {4}|\t)", lines[j]):
+                    code_block_lines.append(re.sub(r"^( {4}|\t)", "", lines[j]))
+                    j += 1
+                code_block = "\n".join(code_block_lines)
+                htmlText += self.codeBlockConvert(code_block)
+                i = j
+                continue
                     
             # Blockquote
             if line.startswith('>') or line.startswith(' >') :
@@ -218,5 +242,8 @@ print(html_output)
 html_output = converter.convert("#### Hello World")
 print(html_output)
 
-html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.\n1. This is a OL.\n2. Item 2.\n300. Item 3.\n- Unordered List.\n- Item 2.\n- Item 3.\n* Item 4.\n* Item 5.\n\nThis is a paragraph.")
+html_output = converter.convert("#### Hello World\n\n>This is a block quote. \n >And it's going still.\n>And going.\n1. This is a OL.\n2. Item 2.\n300. Item 3.\n- Unordered List.\n- Item 2.\n- Item 3.\n* Item 4.\n* Item 5.\n\nThis is a paragraph.\n\n")
+print(html_output)
+
+html_output = converter.convert("\n\t<tag>This is a code block.\n\tWith some code in it.</tag>\n")
 print(html_output)
