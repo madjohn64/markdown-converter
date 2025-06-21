@@ -1,15 +1,9 @@
 # Central logic for Markdown converstion to HTML.
+# This file is part of the Markdown to HTML converter project. It provides the core logic for converting Markdown syntax to HTML.
 
 import re, html
 from typing import List, Tuple
-
-class Token:
-    def __init__(self, type_, content):
-        self.type = type_
-        self.content = content
-
-    def __repr__(self):
-        return f"Token(type={self.type}, content={self.content!r})"
+import inlineConvert # Importing inline conversion function.
 
 class MarkdownConverter :
     """
@@ -127,7 +121,8 @@ class MarkdownConverter :
         while i < len(lines) :
             line = lines[i].rstrip()
             
-            if not line.strip() : #Skip empty lines.
+            if not line.strip() : #Skip empty lines in HTML, but keep them for code formatting.
+                htmlText += "\n"
                 i += 1
                 continue 
             
@@ -169,6 +164,12 @@ class MarkdownConverter :
                 i += max(1, j-i)
                 continue
             
+            # Horizontal Rule.
+            if re.match(r"^[-*]{3,}|^_+$", line) != None :
+                htmlText = htmlText + "<hr>\n"
+                i += 1
+                continue
+            
             #Ordered List.
             if re.match(r"^\d*\.", line) != None :
                 ordList = re.sub(r"^\d*\.", "", line.strip())
@@ -201,11 +202,10 @@ class MarkdownConverter :
             # Paragraph catch all. Needs to check for next lines - INCOMPLETE.
             htmlText = htmlText + "<p>" + line + "</p>\n"
             i += 1
+            
+            htmlText = inlineConvert.markdown_to_html_inline(htmlText)  # Convert inline markdown to HTML.
                    
         return htmlText
-                
-        
-
 
 #Test Driver - delete this once complete.
 def main() :

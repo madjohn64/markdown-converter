@@ -37,15 +37,15 @@ Here's a numbered list:
 
 Now a nested list:
 
- 1. First, get these ingredients:
+1. First, get these ingredients:
 
-      * carrots
-      * celery
-      * lentils
+  * carrots
+  * celery
+  * lentils
 
- 2. Boil some water.
+2. Boil some water.
 
- 3. Dump everything in the pot. 
+3. Dump everything in the pot. 
 
 A horizontal rule follows.
 
