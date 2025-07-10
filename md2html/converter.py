@@ -171,10 +171,10 @@ class MarkdownConverter :
                 continue
             
             #Ordered List.
-            if re.match(r"^\d*\.", line) != None :
+            if re.match(r"^\s*\d+\.", line) != None :
                 ordList = re.sub(r"^\d*\.", "", line.strip())
                 j = i + 1
-                while j < len(lines) and re.match(r"^\d*\.", lines[j]) != None : 
+                while j < len(lines) and re.match(r"\s*^\d*\.", lines[j]) != None : 
                     ordList = ordList + "\n" + re.sub(r"^\d*\.", "", lines[j].strip())
                     j += 1
                 htmlText = htmlText + self.orderedListConvert(ordList)
@@ -182,7 +182,7 @@ class MarkdownConverter :
                 continue
             
             #Unordered List.
-            if re.match(r"^\*\s|-\s|\+\s", line.strip()) != None :
+            if re.match(r"^\s*\*\s|\s*-\s|\s*\+\s", line.strip()) != None :
                 unOrdList = re.sub(r"^\*\s|-\s|\+\s", "", line.strip())
                 subList = ""
                 j = i + 1
