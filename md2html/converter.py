@@ -104,6 +104,47 @@ class MarkdownConverter :
         """
         return f"<code>{html.escape(code_text.strip())}</code>"
     
+    def markdown_table_to_html(self, table_lines: List[str]) -> str:
+        """
+        Converts a list of Markdown table lines to an HTML table string.
+        """
+        # Remove leading/trailing whitespace and filter out empty lines
+        stripped_lines = []
+        for line in table_lines:
+            stripped = line.strip()
+            if stripped:
+                stripped_lines.append(stripped)
+        table_lines = stripped_lines
+        if len(table_lines) < 2:
+            return ""  # Not a valid table
+
+        # Split header and separator
+        header = table_lines[0]
+        separator = table_lines[1]
+        rows = table_lines[2:]
+
+        # Split columns by '|', ignoring leading/trailing pipes
+        def split_row(row: str) -> List[str]:
+            return [cell.strip() for cell in row.strip('|').split('|')]
+
+        header_cells = split_row(header)
+        html = ['<table>', '  <thead>', '    <tr>']
+        for cell in header_cells:
+            html.append(f'      <th>{cell}</th>')
+        html.extend(['    </tr>', '  </thead>', '  <tbody>'])
+
+        for row in rows:
+            if not row.strip():
+                continue
+            cells = split_row(row)
+            html.append('    <tr>')
+            for cell in cells:
+                html.append(f'      <td>{cell}</td>')
+            html.append('    </tr>')
+
+        html.extend(['  </tbody>', '</table>'])
+        return '\n'.join(html)
+    
     def convert(self, markdown_text: str) -> str :
         """
         Break down text by lines. 
@@ -141,8 +182,9 @@ class MarkdownConverter :
                 i += 2 #Increase two to skip the line that underlines since this is not part of the html.
                 continue
             
-            # Code Blocks.
-            if re.match(r"^( {4}|\t)", line):
+            # Code Blocks. Doesn't work properly.
+            """
+            if re.match(r"^\s*```|\t)", line):
                 code_block_lines = [re.sub(r"^( {4}|\t)", "", line)]
                 j = i + 1
                 while j < len(lines) and re.match(r"^( {4}|\t)", lines[j]):
@@ -151,7 +193,7 @@ class MarkdownConverter :
                 code_block = "\n".join(code_block_lines)
                 htmlText += self.codeBlockConvert(code_block)
                 i = j
-                continue
+                continue"""
                     
             # Blockquote
             if line.startswith('>') or line.startswith(' >') :
@@ -199,6 +241,21 @@ class MarkdownConverter :
                 i += max(1, j-i)
                 continue
             
+            # Tables
+            if (
+                '|' in line and
+                i + 1 < len(lines) and
+                re.match(r'^\s*\|?[\s:-]+\|[\s|:-]*$', lines[i + 1])
+            ):
+                # Collect all table lines
+                table_lines = [line]
+                i += 1
+                while i < len(lines) and '|' in lines[i]:
+                    table_lines.append(lines[i])
+                    i += 1
+                htmlText += self.markdown_table_to_html(table_lines) + '\n'
+                continue  # Skip incrementing i at the end of the loop
+            
             # Paragraph catch all. Needs to check for next lines - INCOMPLETE.
             htmlText = htmlText + "<p>" + line + "</p>\n"
             i += 1
@@ -228,6 +285,9 @@ def main() :
     print(html_output)
 
     html_output = converter.convert("\n\t<tag>This is a code block.\n\tWith some code in it.</tag>\n")
+    print(html_output)
+
+    html_output = converter.convert("| Integrate symbolic reasoning, causal inference, or explainable AI techniques                       | Causal machine learning for healthcare or policy applications    |\n| **Domain-Specific AI Applications**              | Focus on AI in specialized sectors such as healthcare, law, art, or finance                        | Computer vision in radiology, generative AI in art/animation     |\n| **User-Centered/Participatory AI**               | Design research with end-user input; focus on human-AI interaction           | Human-centered design in assistive robotics or educational tools |\n\n---\n\n## **Summary Table**\n\n| Step                       | Actions               |\n|----------------------------|---------------------------------------------------------------------|\n| Build & Specialize Skills  | Master core AI topics, explore interdisciplinary learning, publish  |\n| Network Widely             | Engage at conferences, join multi-field groups, active online       |\n| Apply Broadly              | Seek roles in classic and adjacent disciplines, tailor applications |\n| Iterate & Expand           | Seek feedback, grow skills (including across domains), share work   |\n| Explore Alternatives       | Collaborate and innovate with diverse methodologies and teams       |\n\n---\n\n**Tips:**\n- **Stay Curious:** Explore alternative research paradigms and seek unique insights from related fields.\n- **Broaden Horizons:** A flexible, interdisciplinary mindset often distinguishes top AI researchers.\n- **Persistence Counts:** The field is competitive, but creativity, adaptability, and networking multiply your chances for success.\n\n---\n\nLet me know if you want a **tailored plan** for a specific AI subfield or advice on integrating a particular discipline into your AI research career!")
     print(html_output)
 
 if __name__ == "__main__":
