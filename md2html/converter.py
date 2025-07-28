@@ -1,4 +1,4 @@
-# Central logic for Markdown converstion to HTML.
+# Central logic for Markdown conversion to HTML.
 # This file is part of the Markdown to HTML converter project. It provides the core logic for converting Markdown syntax to HTML.
 
 import re, html
