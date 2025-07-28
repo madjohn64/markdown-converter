@@ -20,8 +20,17 @@ def markdown_to_html_inline(text):
     text = re.sub(r'\*([^\*]+)\*', r'<em>\1</em>', text)
     # Italic with _.
     text = re.sub(r'_([^_]+)_', r'<em>\1</em>', text)
-    # Images
-    text = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', r'<img alt="\1" src="\2">', text)
+    # Images with optional title
+    def repl_image(match):
+        alt_text = match.group(1)
+        src = match.group(2)
+        title = match.group(3)
+        if title:
+            return f'<img alt="{alt_text}" src="{src}" title="{title}">'
+        else:
+            return f'<img alt="{alt_text}" src="{src}">' 
+
+    text = re.sub(r'!\[([^\]]*)\]\(([^\s)]+)(?:\s+"([^"]+)")?\)', repl_image, text)
     # Links
     text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', text)
     return text
