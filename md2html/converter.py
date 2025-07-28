@@ -3,7 +3,7 @@
 
 import re, html
 from typing import List, Tuple
-import inlineConvert # Importing inline conversion function.
+from . import inlineConvert  # Importing inline conversion function.
 
 class MarkdownConverter :
     """
