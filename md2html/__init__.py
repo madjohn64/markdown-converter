@@ -1,1 +1,3 @@
-from .converter import Token
+from .converter import MarkdownConverter
+
+__all__ = ["MarkdownConverter"]
