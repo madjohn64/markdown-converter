@@ -147,11 +147,15 @@ class MarkdownConverter :
     
     def convert(self, markdown_text: str) -> str :
         """
-        Break down text by lines. 
-        Hand list of lines to tokenizer to construct tokens. 
-        Receives token_dict back from tokenizer. 
-        Use token categories to hand each token to respective 
-        Convert markdown text to HTML.
+        Parse the Markdown text and convert it to HTML.
+
+        The input is split into lines and each line is inspected in order
+        to recognise block level structures such as headers, lists,
+        block quotes, horizontal rules and tables.  Matching lines are
+        converted to their HTML counterparts immediately.  Once all lines
+        have been processed the resulting HTML string is passed to the
+        inline converter so that elements like **bold**, *italic*, links
+        and inline code are handled.
 
         :param markdown_text: raw markdown string
         :return: converted HTML string
