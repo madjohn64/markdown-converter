@@ -186,18 +186,31 @@ class MarkdownConverter :
                 i += 2 #Increase two to skip the line that underlines since this is not part of the html.
                 continue
             
-            # Code Blocks. Doesn't work properly.
-            """
-            if re.match(r"^\s*```|\t)", line):
-                code_block_lines = [re.sub(r"^( {4}|\t)", "", line)]
+            # Code Blocks - fenced with ``` or indented with 4 spaces / a tab
+            if line.lstrip().startswith("```"):
                 j = i + 1
-                while j < len(lines) and re.match(r"^( {4}|\t)", lines[j]):
-                    code_block_lines.append(re.sub(r"^( {4}|\t)", "", lines[j]))
+                code_block_lines: List[str] = []
+                while j < len(lines) and not lines[j].lstrip().startswith("```"):
+                    code_block_lines.append(lines[j])
                     j += 1
-                code_block = "\n".join(code_block_lines)
-                htmlText += self.codeBlockConvert(code_block)
+                htmlText += self.codeBlockConvert("\n".join(code_block_lines))
+                i = j + 1 if j < len(lines) else j
+                continue
+
+            if (
+                (line.startswith("    ") or line.startswith("\t"))
+                and (i == 0 or not lines[i-1].strip())
+                and re.match(r"^[*+-]|^\d+\.", line.strip()) is None
+            ):
+                code_block_lines = [line]
+                j = i + 1
+                while j < len(lines) and (lines[j].startswith("    ") or lines[j].startswith("\t")):
+                    code_block_lines.append(lines[j])
+                    j += 1
+                cleaned = "\n".join(re.sub(r"^( {4}|\t)", "", l) for l in code_block_lines)
+                htmlText += self.codeBlockConvert(cleaned)
                 i = j
-                continue"""
+                continue
                     
             # Blockquote
             if line.startswith('>') or line.startswith(' >') :
