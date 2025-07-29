@@ -30,5 +30,15 @@ Now a nested list:
         self.assertIn('<ul>', html)
         self.assertIn('<code>code goes here</code>', html)
 
+    def test_fenced_code_block(self):
+        markdown = """```
+<tag>This is a code block</tag>
+```
+"""
+        converter = MarkdownConverter()
+        html = converter.convert(markdown)
+        self.assertIn('<pre><code>', html)
+        self.assertIn('&lt;tag&gt;This is a code block&lt;/tag&gt;', html)
+
 if __name__ == '__main__':
     unittest.main()
