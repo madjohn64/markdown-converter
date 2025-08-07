@@ -1,6 +1,6 @@
 # Guide to Finding a Job as an **AI Researcher**
 
-Absolutely! Here’s a comprehensive and updated guide for finding a job as an **AI Researcher**, enhanced with alternative methodologies and interdisciplinary perspectives that can broaden your approach and maximize your success.
+Absolutely! Here's a comprehensive and updated guide for finding a job as an **AI Researcher**, enhanced with alternative methodologies and interdisciplinary perspectives that can broaden your approach and maximize your success.
 
 ---
 
@@ -8,7 +8,7 @@ Absolutely! Here’s a comprehensive and updated guide for finding a job as an *
 
 ### a. **Academic Foundations**
 
-- **Degree Path:** Pursue a degree in Computer Science, Mathematics, Statistics, Engineering, Physics, or related fields. While a PhD is often preferred, master’s degrees or exceptional industry experience can also suffice.
+- **Degree Path:** Pursue a degree in Computer Science, Mathematics, Statistics, Engineering, Physics, or related fields. While a PhD is often preferred, master's degrees or exceptional industry experience can also suffice.
 - **Core Courses:** Prioritize machine learning, deep learning, probability, statistics, optimization, and programming.
 
 ### b. **Technical Excellence**
@@ -51,7 +51,7 @@ Absolutely! Here’s a comprehensive and updated guide for finding a job as an *
 ### c. **Proactive Outreach**
 
 - **Networking:** Reach out to researchers in both AI and related areas. Demonstrate familiarity with their work, and express interest in collaborative or cross-disciplinary research.
-- **Mentorship:** Seek out mentors from diverse backgrounds—academia, industry, or emerging fields—to gain broad perspectives.
+- **Mentorship:** Seek out mentors from diverse backgrounds such as academia, industry, or emerging fields, in order to gain broad perspectives.
 
 ---
 
@@ -67,7 +67,7 @@ Absolutely! Here’s a comprehensive and updated guide for finding a job as an *
 
 - **CV/Resume:** Spotlight research and technical skills and interdisciplinary collaborations.
 - **Statements:** For academic roles, stress openness to and expertise in cross-domain research.
-- **Portfolio:** Showcase interdisciplinary projects and demonstrate how you’ve integrated other fields into your AI research.
+- **Portfolio:** Showcase interdisciplinary projects and demonstrate how you've integrated other fields into your AI research.
 
 ### c. **Interview Readiness**
 
@@ -117,6 +117,3 @@ Absolutely! Here’s a comprehensive and updated guide for finding a job as an *
 ---
 
 Let me know if you want a **tailored plan** for a specific AI subfield or advice on integrating a particular discipline into your AI research career!
-           | Integrate symbolic reasoning, causal inference, or explainable AI techniques                       | Causal machine learning for healthcare or policy applications    |\n| **Domain-Specific AI Applications**              | Focus on AI in specialized sectors such as healthcare, law, art, or finance                        | Computer vision in radiology, generative AI in art/animation     |\n| **User-Centered/Participatory AI**               | Design research with end-user input; focus on human-AI interaction
-                      | Human-centered design in assistive robotics or educational tools |\n\n---\n\n## **Summary Table**\n\n| Step                       | Actions
-                                              |\n|----------------------------|---------------------------------------------------------------------|\n| Build & Specialize Skills  | Master core AI topics, explore interdisciplinary learning, publish  |\n| Network Widely             | Engage at conferences, join multi-field groups, active online       |\n| Apply Broadly              | Seek roles in classic and adjacent disciplines, tailor applications |\n| Iterate & Expand           | Seek feedback, grow skills (including across domains), share work   |\n| Explore Alternatives       | Collaborate and innovate with diverse methodologies and teams       |\n\n---\n\n**Tips:**\n- **Stay Curious:** Explore alternative research paradigms and seek unique insights from related fields.\n- **Broaden Horizons:** A flexible, interdisciplinary mindset often distinguishes top AI researchers.\n- **Persistence Counts:** The field is competitive, but creativity, adaptability, and networking multiply your chances for success.\n\n---\n\nLet me know if you want a **tailored plan** for a specific AI subfield or advice on integrating a particular discipline into your AI research career!'

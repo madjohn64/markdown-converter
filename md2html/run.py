@@ -4,7 +4,7 @@
 
 import sys
 import os
-from converter import MarkdownConverter
+from .converter import MarkdownConverter
 
 def main():
     if len(sys.argv) != 3:
